@@ -10,7 +10,7 @@ Actorization converts existing software into reusable serverless applications co
 ## Quick start
 
 1. Run `apify init <actor-name> --user-agent apify-agent-skills/apify-actorization` in project root
-2. Create a `Dockerfile` for the project's language (`apify init` does not create one)
+2. Create a `Dockerfile` for the project's language
 3. Wrap code with SDK lifecycle (see language-specific section below)
 4. Configure `.actor/input_schema.json`
 5. Test with `apify run --input '{"key": "value"}' --user-agent apify-agent-skills/apify-actorization`
@@ -99,19 +99,15 @@ Before making changes, understand the project:
 
 ## Step 2: Initialize Actor structure
 
-Run in the project root, passing the Actor name positionally:
+Run in the project root, passing a DNS-friendly Actor name (e.g. `my-scraper`):
 
 ```bash
 apify init <actor-name> --user-agent apify-agent-skills/apify-actorization
 ```
 
-Pick a DNS-friendly name (lowercase letters, digits and dashes, at least 3 characters, e.g. `my-scraper`). Without a name, `apify init` prompts for one and hangs in non-interactive shells. Do not rely on `--yes` - it does not skip the name prompt.
+The name passed as an argument keeps `apify init` from prompting; without it, the command waits for input and hangs in non-interactive shells.
 
-This creates:
-- `.actor/actor.json` - Actor configuration and metadata
-- `storage/` - Local storage, including a prefilled `INPUT.json` in the default key-value store
-
-`apify init` does **not** create a `Dockerfile`. Without one, the platform builds from `apify/actor-node:24`, so a Python Actor builds without errors and then fails at runtime. Create a `Dockerfile` with a base image matching the project's language - `apify/actor-python` for Python, `apify/actor-node` for JavaScript/TypeScript. Place it at `.actor/Dockerfile` or in the project root, or point to it with the `dockerfile` field in `.actor/actor.json`.
+`apify init` sets up `.actor/actor.json` and local `storage/`, but no `Dockerfile`. Without one, the platform builds on its default Node.js image, so a Python Actor builds cleanly and then fails at runtime. Create a `Dockerfile` whose base image matches the project's language (`apify/actor-python` for Python, `apify/actor-node` for JavaScript/TypeScript) at `.actor/Dockerfile`, in the project root, or at the path set in the `dockerfile` field of `.actor/actor.json`.
 
 ## Step 3: Apply language-specific changes
 
